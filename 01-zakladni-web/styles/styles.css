@@ -18,8 +18,84 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+h1 {
+    font-size: 36px;
+    margin: unset; /*odstraní výchozí okraje*/
+}
+
+h1, h2 {
+    color :rgb(219, 0, 117); 
+}
+
 
 p {
     font-family: 'Times New Roman', Times, serif;
     font-size: 18px;
+    margin: unset;
+}
+
+
+header, footer {
+    background-color:rgb(230, 196, 214);
+    padding: 0.5rem; /*1rem = 16px*/
+    padding: 0.5rem 1rem; /*0,5rem = 8px*/
+    padding: 0.5rem 1rem 1.5rem 2rem; /*1.5rem = 24px, 2rem = 32px*/
+}
+
+
+footer p {
+    margin: unset;
+}
+
+
+.page-wrapper {
+    width: 90%;
+    margin: 0 auto; /*0 auto = horizontální centrování (zarovnání na střed)*/
+}
+
+nav ul {
+    display: flex; /*nastaví zobrazení položek v řádku*/
+    list-style-type: none;
+    gap: 0.5rem; /*mezera mezi položkami v řádku*/
+    flex-wrap: wrap; /*při nedostatku místa se položky zalomí do dalšího řádku*/
+    padding: 0;
+
+}
+
+nav li {
+flex-grow: 1;
+flex-shrink: 1;
+flex-basis: 100px;
+/*flex: 1 1 100px; - zkrácená syntaxe pro flex-grow, flex-shrink a flex-basis*/
+}
+
+nav a {
+    display: block;
+    background-color:rgb(230, 196, 214);
+    color: rgb(219, 0, 117);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 20px;
+    white-space: nowrap; /*zabraňuje zalomení textu*/
+}
+
+
+
+
+.grid-container {
+    display: grid;
+    /*grid-template-columns: auto auto; - dva sloupce stejné šířky*/
+    /*grid-template-columns: 2fr 4fr 5fr; - dva sloupce, první zabírá 2/6 a druhý 4/6 dostupné šířky*/
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /*opakování sloupců, které se přizpůsobí dostupné šířce, minimální šířka 250px a maximalní šířka 1fr (dostupná šířka*/
+    gap: 1rem; /*mezera mezi řádky a sloupci*/
+}
+
+
+.card {
+    background-color: rgb(230, 196, 214);
+    padding: 1rem;
+    border-radius: 10px;
+    /*margin-top: 1rem;*/
+    border: 2px solid rgb(217, 52, 154);
+
 }
