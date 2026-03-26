@@ -12,8 +12,8 @@
 
         <nav>
             <ul>
-                <li><a href="/BooksApp/public/index.php">Seznam knih</a></li>
-                <li><a href="/BooksApp/public/index.php?url=book/create">Přidat novou knihu</a></li>
+                <li><a href="/WA-2026-Jezkova-Eva/BooksApp/public/index.php">Seznam knih</a></li>
+                <li><a href="/WA-2026-Jezkova-Eva/BooksApp/public/index.php?url=book/create">Přidat novou knihu</a></li>
 
             </ul>
 
@@ -24,7 +24,28 @@
     <main>
         <h2>Dostupné knihy</h2>
         
-        <p>Zde se brzy objeví seznam knih načtený z databáze.</p>
+        <?php if (!empty($books)): ?>
+            <table border="1" cellpadding="10" cellspacing="0" style="margin-top: 20px; width: 100%; text-align: left;">
+                <tr style="background-color: #f2f2f2;">
+                    <th>Název</th>
+                    <th>Autor</th>
+                    <th>ISBN</th>
+                    <th>Rok vydání</th>
+                </tr>
+                
+                <?php foreach ($books as $book): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($book['title']); ?></td>
+                    <td><?php echo htmlspecialchars($book['author']); ?></td>
+                    <td><?php echo htmlspecialchars($book['isbn']); ?></td>
+                    <td><?php echo htmlspecialchars($book['year']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+                
+            </table>
+        <?php else: ?>
+            <p>Zatím tu nejsou žádné knihy. Běž nějakou přidat!</p>
+        <?php endif; ?>
         
         </main>
 

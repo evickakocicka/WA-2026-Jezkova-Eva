@@ -1,5 +1,5 @@
 <?php
-
+//echo "TEST 1 - ZDE JSEM"; die();
 // Pro účely výuky a laděn na lokálním serveru (např. xampp)
 //je vhodné zapnout kompletní zobrazování chyb
 ini_set('display_errors', 1);
@@ -10,5 +10,5 @@ error_reporting(E_ALL);
 require_once '../core/App.php';
 
 //Inicializace aplikace a spuštění procesu routování
-$ = new App();
+$app = new App();
 

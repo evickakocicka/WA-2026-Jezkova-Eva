@@ -12,7 +12,7 @@
         <p>Vyplňte údaje a uložte knihu do databáze</p>
     </div>
     <div>
-        <form action="../../controllers/BookController.php" method="post" enctype="multipart/form-data">
+         <form action="/WA-2026-Jezkova-Eva/BooksApp/public/index.php?url=book/store" method="post" enctype="multipart/form-data">
             <div>
                 <div>
                     <label for="title">Název knihy <span>*</span></label>
