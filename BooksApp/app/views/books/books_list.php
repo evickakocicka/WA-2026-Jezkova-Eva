@@ -21,6 +21,44 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <?php if (isset($_SESSION['messages']) && !empty($_SESSION['messages'])): ?>
+            <div class="mb-6 space-y-3">
+                <?php foreach ($_SESSION['messages'] as $type => $messages): ?>
+                    <?php
+                        // Nastavení barev Tailwindu podle typu zprávy
+                        $bgClass = 'bg-gray-100';
+                        $textClass = 'text-gray-800';
+                        $borderClass = 'border-gray-300';
+
+                        if ($type === 'success') {
+                            $bgClass = 'bg-green-50';
+                            $textClass = 'text-green-800';
+                            $borderClass = 'border-green-200';
+                        } elseif ($type === 'error') {
+                            $bgClass = 'bg-red-50';
+                            $textClass = 'text-red-800';
+                            $borderClass = 'border-red-200';
+                        } elseif ($type === 'notice') {
+                            $bgClass = 'bg-yellow-50';
+                            $textClass = 'text-yellow-800';
+                            $borderClass = 'border-yellow-200';
+                        }
+                    ?>
+                    
+                    <?php foreach ($messages as $message): ?>
+                        <div class="p-4 rounded-lg border <?= $bgClass ?> <?= $textClass ?> <?= $borderClass ?> shadow-sm">
+                            <strong><?= htmlspecialchars($message) ?></strong>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+            
+            <?php 
+                // ZÁSADNÍ KROK: Vymazání zpráv po zobrazení
+                unset($_SESSION['messages']); 
+            ?>
+        <?php endif; ?>
         <div class="mb-6">
             <h2 class="text-3xl font-extrabold text-gray-900">Dostupné knihy</h2>
             <p class="text-gray-500 mt-2">Přehled všech knih uložených v databázi.</p>

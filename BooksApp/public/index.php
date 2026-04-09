@@ -1,7 +1,10 @@
 <?php
+// Nastartování relací pro ukládání dočasných dat (Flash zprávy)
+session_start();
+
 //echo "TEST 1 - ZDE JSEM"; die();
-// Pro účely výuky a laděn na lokálním serveru (např. xampp)
-//je vhodné zapnout kompletní zobrazování chyb
+// Pro účely výuky a ladění na lokálním serveru (např. xampp)
+// je vhodné zapnout kompletní zobrazování chyb
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -16,4 +19,3 @@ require_once '../core/App.php';
 
 //Inicializace aplikace a spuštění procesu routování
 $app = new App();
-

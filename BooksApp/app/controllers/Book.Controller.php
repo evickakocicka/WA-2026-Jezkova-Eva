@@ -148,4 +148,21 @@ class BookController {
             exit;
         }
     }
+
+    // --- Pomocné metody pro systém notifikací ---
+
+    protected function addSuccessMessage($message) {
+        // Zelená zpráva o úspěchu
+        $_SESSION['messages']['success'][] = $message;
+    }
+
+    protected function addNoticeMessage($message) {
+        // Žlutá informativní zpráva
+        $_SESSION['messages']['notice'][] = $message;
+    }
+
+    protected function addErrorMessage($message) {
+        // Červená chybová zpráva
+        $_SESSION['messages']['error'][] = $message;
+    }
 }
