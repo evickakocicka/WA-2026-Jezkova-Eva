@@ -98,4 +98,54 @@ class BookController {
         // Načtení šablony pro úpravu (ta zatím pravděpodobně neexistuje)
         require_once '../app/views/books/book_edit.php';
     }
+
+    // --- NOVÁ METODA: Zpracování upravených dat ---
+    public function update($id = null) {
+        // Zabezpečení: Je k dispozici ID?
+        if (!$id) {
+            header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+            // 1. Získání a očištění dat z formuláře
+            $title = htmlspecialchars($_POST['title'] ?? "");
+            $author = htmlspecialchars($_POST['author'] ?? "");
+            $isbn = htmlspecialchars($_POST['isbn'] ?? "");
+            $category = htmlspecialchars($_POST['category'] ?? "");
+            $subcategory = htmlspecialchars($_POST['subcategory'] ?? "");
+            
+            // Převedení číselných hodnot
+            $year = (int)($_POST['year'] ?? 0);
+            $price = (float)($_POST['price'] ?? 0);
+            
+            $link = htmlspecialchars($_POST['link'] ?? "");
+            $description = htmlspecialchars($_POST['description'] ?? "");
+            
+            // Zástupce pro obrázky
+            $uploadedImages = [];
+
+            // 2. Komunikace s databází a modelem
+            $database = new Database();
+            $db = $database->getConnection();
+
+            if ($db) {
+                $bookModel = new Book($db);
+                // 3. Volání updatu nad modelem
+                $bookModel->update(
+                    $id, $title, $author, $category, $subcategory,
+                    $year, $price, $isbn, $description, $link, $uploadedImages
+                );
+            }
+
+            // 4. Přesměrování zpět na seznam
+            header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
+            exit;
+        } else {
+            // Pokud sem někdo vleze jinak než přes formulář
+            header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
+            exit;
+        }
+    }
 }
