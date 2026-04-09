@@ -3,20 +3,29 @@
 class Book {
     private $db;
 
-    // Konstruktor - ten už tam máš
+    // Konstruktor
     public function __construct($database_connection) {
         $this->db = $database_connection;
     }
 
-    // 1. ULOŽENÍ (save)
-    public function save($title, $author, $isbn, $year) {
-        $sql = "INSERT INTO books (title, author, isbn, year) VALUES (:title, :author, :isbn, :year)";
+    // 1. ULOŽENÍ (save) - TADY JE TA ZMĚNA! Nyní ukládá ÚPLNĚ VŠE.
+    public function save($title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $images = []) {
+        $sql = "INSERT INTO books (title, author, category, subcategory, year, price, isbn, description, link, images) 
+                VALUES (:title, :author, :category, :subcategory, :year, :price, :isbn, :description, :link, :images)";
+        
         $stmt = $this->db->prepare($sql);
+        
         return $stmt->execute([
             ':title' => $title,
             ':author' => $author,
+            ':category' => $category,
+            ':subcategory' => $subcategory,
+            ':year' => $year,
+            ':price' => $price,
             ':isbn' => $isbn,
-            ':year' => $year
+            ':description' => $description,
+            ':link' => $link,
+            ':images' => json_encode($images)
         ]);
     }
 
