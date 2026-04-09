@@ -7,31 +7,26 @@ class BookController {
 
     // Zobrazení seznamu knih
     public function index() {
-        // Připojíme databázi a vytvoříme prázdné pole pro knihy
         $database = new Database();
         $db = $database->getConnection();
         $books = [];
 
-        // Pokud spojení funguje, vytáhneme knihy přes model
         if ($db) {
             $bookModel = new Book($db);
             $books = $bookModel->getAllBooks(); 
         }
 
-        // Tady posíláme knihy (proměnnou $books) na tvůj HTML talíř
         require_once '../app/views/books/books_list.php';
     }
-    // Zobrazení formuláře
+
+    // Zobrazení formuláře pro novou knihu
     public function create() {
         require_once '../app/views/books/Book_Create.php';
     }
 
-    // TADY JE TVŮJ ÚKOL: Zpracování formuláře a uložení do DB
+    // Zpracování formuláře a uložení do DB
     public function store() {
-        // Zkontrolujeme, jestli sem uživatel opravdu odeslal formulář
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
-            // 1. Připojení k databázi
             $database = new Database();
             $db = $database->getConnection();
             
@@ -39,23 +34,68 @@ class BookController {
                 die("Nepodařilo se připojit k databázi.");
             }
 
-            // 2. Vytvoření modelu, který jsme napsali v předchozím kroku
             $bookModel = new Book($db);
             
-            // 3. Natažení dat z políček formuláře
             $title = $_POST['title'] ?? '';
             $author = $_POST['author'] ?? '';
             $isbn = $_POST['isbn'] ?? '';
             $year = $_POST['year'] ?? '';
 
-            // 4. Pokus o uložení do databáze
             if ($bookModel->save($title, $author, $isbn, $year)) {
-                // Když se to povede, přesměrujeme tě zpět na hlavní stránku
                 header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
                 exit;
             } else {
                 echo "Došlo k chybě při ukládání do databáze.";
             }
         }
+    }
+
+    // --- Smazání knihy ---
+    public function delete($id = null) {
+        if (!$id) {
+            header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
+            exit;
+        }
+
+        $database = new Database();
+        $db = $database->getConnection();
+
+        if ($db) {
+            $bookModel = new Book($db);
+            $bookModel->delete($id);
+        }
+
+        header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
+        exit;
+    }
+
+    // --- NOVÁ METODA: Zobrazení formuláře pro editaci ---
+    public function edit($id = null) {
+        // Kontrola, zda máme ID
+        if (!$id) {
+            header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
+            exit;
+        }
+
+        // Připojení k databázi
+        $database = new Database();
+        $db = $database->getConnection();
+        
+        if (!$db) {
+            die("Nepodařilo se připojit k databázi.");
+        }
+
+        // Získání dat o knize z modelu
+        $bookModel = new Book($db);
+        $book = $bookModel->getById($id);
+
+        // Pokud kniha neexistuje, návrat na hlavní stránku
+        if (!$book) {
+            header('Location: /WA-2026-Jezkova-Eva/BooksApp/public/index.php');
+            exit;
+        }
+
+        // Načtení šablony pro úpravu (ta zatím pravděpodobně neexistuje)
+        require_once '../app/views/books/book_edit.php';
     }
 }
