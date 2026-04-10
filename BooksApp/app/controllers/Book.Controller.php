@@ -136,24 +136,18 @@ class BookController {
             if ($db) {
                 $bookModel = new Book($db);
                 
-                // --- TO-DO: Krok 5 - Zachování obrázků ---
-                // 1. Získáme starou knihu z databáze a vyčteme z ní stávající obrázky
                 $existingBook = $bookModel->getById($id);
                 $currentImages = [];
                 if ($existingBook && !empty($existingBook['images'])) {
-                    // Může to být uložené jako JSON nebo jako pole
                     $currentImages = is_string($existingBook['images']) ? json_decode($existingBook['images'], true) : $existingBook['images'];
                     if (!is_array($currentImages)) $currentImages = [];
                 }
 
-                // 2. Podíváme se, jestli uživatel nahrál nové fotky
                 $uploadedImages = $this->processImageUploads();
 
-                // 3. Pokud nic nového nenahrál, použijeme staré obrázky z databáze!
                 if (empty($uploadedImages)) {
                     $uploadedImages = $currentImages;
                 }
-                // ------------------------------------------
 
                 if ($bookModel->update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $uploadedImages)) {
                     $this->addSuccessMessage('Údaje o knize byly úspěšně upraveny. ✨');
@@ -218,13 +212,22 @@ class BookController {
             for ($i = 0; $i < $fileCount; $i++) {
                 if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
                     $tmpName = $_FILES['images']['tmp_name'][$i];
-                    $originalName = basename($_FILES['images']['name'][$i]);
-                    $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+                    
+                    // --- BEZPEČNĚJŠÍ KONTROLA TYPU SOUBORU ---
+                    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                    $mime = finfo_file($finfo, $tmpName);
+                    finfo_close($finfo);
 
-                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-                    if (!in_array($fileExtension, $allowedExtensions)) {
+                    $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                    
+                    if (!in_array($mime, $allowedMimeTypes)) {
+                        $this->addErrorMessage('Soubor není platný obrázek! ❌');
                         continue; 
                     }
+                    // ----------------------------------------
+
+                    $originalName = basename($_FILES['images']['name'][$i]);
+                    $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
                     $newName = 'book_' . uniqid() . '_' . substr(md5(mt_rand()), 0, 4) . '.' . $fileExtension;
                     $targetFilePath = $uploadDir . $newName;
