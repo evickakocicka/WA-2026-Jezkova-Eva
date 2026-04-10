@@ -54,4 +54,45 @@
             </div>
 
             <div>
-                <label
+                <label class="block text-sm font-medium text-gray-600 mb-2">Obrázky</label>
+                <label class="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-pink-200 rounded-2xl cursor-pointer hover:border-pink-400 hover:bg-pink-50 transition text-center">
+                    <span id="file-title" class="text-pink-400 font-medium">Klikni pro výběr obrázků 🖼️</span>
+                    <span id="file-info" class="text-sm text-gray-400 mt-1">Zatím nebyly vybrány žádné soubory</span>
+                    <input type="file" id="images" name="images[]" multiple accept="image/*" class="hidden">
+                </label>
+            </div>
+
+            <div class="pt-4 border-t border-pink-50">
+                <button type="submit" class="w-full bg-pink-400 hover:bg-pink-500 text-white font-bold py-3 px-4 rounded-xl shadow transition">
+                    💖 Uložit knihu
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('images');
+    const fileTitle = document.getElementById('file-title');
+    const fileInfo = document.getElementById('file-info');
+
+    fileInput.addEventListener('change', function(event) {
+        const files = event.target.files;
+
+        if (files.length === 0) {
+            fileTitle.textContent = 'Klikni pro výběr obrázků 🖼️';
+            fileTitle.className = 'text-pink-400 font-medium';
+            fileInfo.textContent = 'Zatím nebyly vybrány žádné soubory';
+        } else if (files.length === 1) {
+            fileTitle.textContent = 'Soubor připraven 💖';
+            fileTitle.className = 'text-pink-600 font-bold';
+            fileInfo.textContent = files[0].name;
+        } else {
+            fileTitle.textContent = 'Soubory připraveny 💖';
+            fileTitle.className = 'text-pink-600 font-bold';
+            fileInfo.textContent = 'Vybráno celkem: ' + files.length + ' souborů';
+        }
+    });
+</script>
+
+<?php require_once '../app/views/layout/footer.php'; ?>

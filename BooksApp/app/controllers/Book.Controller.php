@@ -33,7 +33,6 @@ class BookController {
 
             $bookModel = new Book($db);
             
-            // TADY JE TA ZMĚNA: Chytáme ÚPLNĚ VŠE z formuláře
             $title = htmlspecialchars($_POST['title'] ?? "");
             $author = htmlspecialchars($_POST['author'] ?? "");
             $isbn = htmlspecialchars($_POST['isbn'] ?? "");
@@ -43,9 +42,9 @@ class BookController {
             $price = (float)($_POST['price'] ?? 0);
             $link = htmlspecialchars($_POST['link'] ?? "");
             $description = htmlspecialchars($_POST['description'] ?? "");
-            $uploadedImages = [];
+            
+            $uploadedImages = $this->processImageUploads();
 
-            // A tady to všechno bezpečně předáme do modelu k uložení
             if ($bookModel->save($title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $uploadedImages)) {
                 $this->addSuccessMessage('Kniha byla úspěšně přidána do knihovny! 🎀');
             } else {
@@ -130,13 +129,32 @@ class BookController {
             $price = (float)($_POST['price'] ?? 0);
             $link = htmlspecialchars($_POST['link'] ?? "");
             $description = htmlspecialchars($_POST['description'] ?? "");
-            $uploadedImages = [];
-
+            
             $database = new Database();
             $db = $database->getConnection();
 
             if ($db) {
                 $bookModel = new Book($db);
+                
+                // --- TO-DO: Krok 5 - Zachování obrázků ---
+                // 1. Získáme starou knihu z databáze a vyčteme z ní stávající obrázky
+                $existingBook = $bookModel->getById($id);
+                $currentImages = [];
+                if ($existingBook && !empty($existingBook['images'])) {
+                    // Může to být uložené jako JSON nebo jako pole
+                    $currentImages = is_string($existingBook['images']) ? json_decode($existingBook['images'], true) : $existingBook['images'];
+                    if (!is_array($currentImages)) $currentImages = [];
+                }
+
+                // 2. Podíváme se, jestli uživatel nahrál nové fotky
+                $uploadedImages = $this->processImageUploads();
+
+                // 3. Pokud nic nového nenahrál, použijeme staré obrázky z databáze!
+                if (empty($uploadedImages)) {
+                    $uploadedImages = $currentImages;
+                }
+                // ------------------------------------------
+
                 if ($bookModel->update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $uploadedImages)) {
                     $this->addSuccessMessage('Údaje o knize byly úspěšně upraveny. ✨');
                 } else {
@@ -184,5 +202,39 @@ class BookController {
     }
     protected function addErrorMessage($message) {
         $_SESSION['messages']['error'][] = $message;
+    }
+
+    protected function processImageUploads() {
+        $uploadedFiles = [];
+        $uploadDir = __DIR__ . '/../../public/uploads/';
+
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+            $fileCount = count($_FILES['images']['name']);
+
+            for ($i = 0; $i < $fileCount; $i++) {
+                if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
+                    $tmpName = $_FILES['images']['tmp_name'][$i];
+                    $originalName = basename($_FILES['images']['name'][$i]);
+                    $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+                    if (!in_array($fileExtension, $allowedExtensions)) {
+                        continue; 
+                    }
+
+                    $newName = 'book_' . uniqid() . '_' . substr(md5(mt_rand()), 0, 4) . '.' . $fileExtension;
+                    $targetFilePath = $uploadDir . $newName;
+
+                    if (move_uploaded_file($tmpName, $targetFilePath)) {
+                        $uploadedFiles[] = $newName;
+                    }
+                }
+            }
+        }
+        return $uploadedFiles;
     }
 }
