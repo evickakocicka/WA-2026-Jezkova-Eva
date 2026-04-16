@@ -19,12 +19,32 @@
             <nav>
                 <ul class="flex space-x-6 items-center">
                     <li><a href="<?= BASE_URL ?>/index.php" class="text-gray-500 hover:text-[#F472B6] font-medium transition">Seznam knih</a></li>
-                    <li>
-                        <a href="<?= BASE_URL ?>/index.php?url=book/create" 
-                           class="bg-[#F472B6] text-white px-5 py-2 rounded-full hover:opacity-90 transition font-medium shadow-sm flex items-center gap-2">
-                           ➕ <span class="hidden sm:inline">Přidat knihu</span>
-                        </a>
-                    </li>
+
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <li>
+                            <a href="<?= BASE_URL ?>/index.php?url=book/create" 
+                               class="bg-[#F472B6] text-white px-5 py-2 rounded-full hover:opacity-90 transition font-medium shadow-sm flex items-center gap-2">
+                               ➕ <span class="hidden sm:inline">Přidat knihu</span>
+                            </a>
+                        </li>
+                        <li class="text-sm text-gray-500">
+                            Ahoj, <span class="font-bold text-[#F472B6]"><?= htmlspecialchars($_SESSION['user_name']) ?></span>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>/index.php?url=auth/logout" class="text-rose-400 hover:text-rose-600 text-sm font-medium transition">Odhlásit</a>
+                        </li>
+
+                    <?php else: ?>
+                        <li>
+                            <a href="<?= BASE_URL ?>/index.php?url=auth/login" class="text-gray-500 hover:text-[#F472B6] font-medium transition">Přihlásit</a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>/index.php?url=auth/register" 
+                               class="border-2 border-[#F472B6] text-[#F472B6] px-5 py-2 rounded-full hover:bg-[#F472B6] hover:text-white transition font-medium shadow-sm">
+                               Registrace
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </nav>
         </div>
