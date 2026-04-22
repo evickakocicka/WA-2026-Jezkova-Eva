@@ -35,6 +35,19 @@ class AuthController {
                 exit;
             }
 
+            // --- NOVÉ: KONTROLA SÍLY HESLA ---
+            // Zjistíme délku hesla a přítomnost čísla
+            $passwordLength = strlen($password);
+            $hasNumber = preg_match('/[0-9]/', $password);
+
+            // Zkontrolujeme naše pravidla (min. 8 znaků a alespoň 1 číslo)
+            if ($passwordLength < 8 || !$hasNumber) {
+                $this->addErrorMessage('Heslo musí mít alespoň 8 znaků a obsahovat minimálně jedno číslo.');
+                header('Location: ' . BASE_URL . '/index.php?url=auth/register');
+                exit;
+            }
+            // --- KONEC KONTROLY SÍLY HESLA ---
+
             // Napojení na DB a Model
             require_once '../app/models/Database.php';
             require_once '../app/models/User.php';
