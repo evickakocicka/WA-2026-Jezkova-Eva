@@ -30,12 +30,18 @@
                     <div>
                         <label for="password" class="block text-xs font-semibold text-pink-400 mb-1 uppercase tracking-wider">Heslo *</label>
                         <input type="password" id="password" name="password" required
+                               minlength="8" 
+                               pattern=".*[0-9].*" 
+                               title="Heslo musí mít alespoň 8 znaků a obsahovat minimálně jedno číslo."
                                class="w-full bg-pink-50 border border-pink-200 rounded-md px-4 py-2 text-pink-800 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all">
                     </div>
 
                     <div>
                         <label for="password_confirm" class="block text-xs font-semibold text-pink-400 mb-1 uppercase tracking-wider">Potvrzení hesla *</label>
                         <input type="password" id="password_confirm" name="password_confirm" required
+                               minlength="8" 
+                               pattern=".*[0-9].*" 
+                               title="Heslo musí mít alespoň 8 znaků a obsahovat minimálně jedno číslo."
                                class="w-full bg-pink-50 border border-pink-200 rounded-md px-4 py-2 text-pink-800 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all">
                     </div>
 
@@ -57,7 +63,7 @@
 
                     <div class="md:col-span-2 mt-6">
                         <button type="submit"
-                                class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-4 rounded-md shadow-lg transition-all transform hover:scale-[1.01] active:scale-[0.99]">
+                                 class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-4 rounded-md shadow-lg transition-all transform hover:scale-[1.01] active:scale-[0.99]">
                             Vytvořit účet
                         </button>
                         <p class="text-center text-pink-400 text-sm mt-4">
