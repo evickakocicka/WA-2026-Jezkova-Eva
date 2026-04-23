@@ -8,10 +8,10 @@ class Book {
         $this->db = $database_connection;
     }
 
-    // 1. ULOŽENÍ (save) - TADY JE TA ZMĚNA! Nyní ukládá ÚPLNĚ VŠE.
-    public function save($title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $images = []) {
-        $sql = "INSERT INTO books (title, author, category, subcategory, year, price, isbn, description, link, images) 
-                VALUES (:title, :author, :category, :subcategory, :year, :price, :isbn, :description, :link, :images)";
+    // 1. ULOŽENÍ (save) - !!! ZMĚNA: Přidáno $userId a sloupec created_by
+    public function save($title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $images = [], $userId = null) {
+        $sql = "INSERT INTO books (title, author, category, subcategory, year, price, isbn, description, link, images, created_by) 
+                VALUES (:title, :author, :category, :subcategory, :year, :price, :isbn, :description, :link, :images, :created_by)";
         
         $stmt = $this->db->prepare($sql);
         
@@ -25,7 +25,8 @@ class Book {
             ':isbn' => $isbn,
             ':description' => $description,
             ':link' => $link,
-            ':images' => json_encode($images)
+            ':images' => json_encode($images),
+            ':created_by' => $userId // !!! ZMĚNA: Předání ID do databáze
         ]);
     }
 
