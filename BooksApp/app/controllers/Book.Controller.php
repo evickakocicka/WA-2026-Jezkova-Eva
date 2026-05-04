@@ -143,7 +143,7 @@ class BookController {
             exit;
         }
 
-        // 🛡️ KONTROLA VLASTNICTVÍ PRO FORMULÁŘ ÚPRAV (Z tvého návodu)
+        // 🛡️ KONTROLA VLASTNICTVÍ PRO FORMULÁŘ ÚPRAV
         if ($book['created_by'] !== $_SESSION['user_id']) {
             $this->addErrorMessage('Nemáte oprávnění upravovat tuto knihu, protože nejste jejím autorem.');
             header('Location: ' . BASE_URL . '/index.php');
@@ -214,7 +214,8 @@ class BookController {
                     $uploadedImages = $currentImages;
                 }
 
-                if ($bookModel->update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $uploadedImages)) {
+                // !!! ZMĚNA JE TADY: Přidáno $_SESSION['user_id'] na úplný konec ↓
+                if ($bookModel->update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $uploadedImages, $_SESSION['user_id'])) {
                     $this->addSuccessMessage('Údaje o knize byly úspěšně upraveny. ✨');
                 } else {
                     $this->addErrorMessage('Změny se nepodařilo uložit.');

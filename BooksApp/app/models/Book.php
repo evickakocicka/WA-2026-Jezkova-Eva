@@ -45,8 +45,8 @@ class Book {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // 4. ÚPRAVA (update)
-    public function update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $images = []) {
+    // 4. ÚPRAVA (update) - !!! ZMĚNA: Přidáno $userId a sloupec updated_by
+    public function update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $images = [], $userId = null) {
         $sql = "UPDATE books 
                 SET title = :title, 
                     author = :author, 
@@ -57,7 +57,8 @@ class Book {
                     isbn = :isbn, 
                     description = :description, 
                     link = :link, 
-                    images = :images 
+                    images = :images,
+                    updated_by = :updated_by 
                 WHERE id = :id";
         
         $stmt = $this->db->prepare($sql);
@@ -73,7 +74,8 @@ class Book {
             ':isbn' => $isbn,
             ':description' => $description,
             ':link' => $link,
-            ':images' => json_encode($images)
+            ':images' => json_encode($images),
+            ':updated_by' => $userId // !!! ZMĚNA: Předání ID pro auditní stopu
         ]);
     }
 
