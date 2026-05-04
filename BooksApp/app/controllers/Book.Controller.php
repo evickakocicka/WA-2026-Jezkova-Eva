@@ -2,6 +2,7 @@
 // Načtení potřebných souborů
 require_once '../app/models/Database.php';
 require_once '../app/models/Book.php';
+require_once '../app/models/Category.php'; // ZMĚNA: Přidán nový model
 
 class BookController {
 
@@ -22,6 +23,13 @@ class BookController {
             header('Location: ' . BASE_URL . '/index.php?url=auth/login');
             exit;
         }
+
+        // ZMĚNA: Načtení kategorií pro formulář
+        $database = new Database();
+        $db = $database->getConnection();
+        $categoryModel = new Category($db);
+        $categories = $categoryModel->getAllCategories();
+
         require_once '../app/views/books/Book_Create.php';
     }
 
@@ -47,7 +55,10 @@ class BookController {
             $title = htmlspecialchars($_POST['title'] ?? "");
             $author = htmlspecialchars($_POST['author'] ?? "");
             $isbn = htmlspecialchars($_POST['isbn'] ?? "");
-            $category = htmlspecialchars($_POST['category'] ?? "");
+            
+            // ZMĚNA: Kategorie nyní chodí jako číslo
+            $category = (int)($_POST['category'] ?? 0); 
+            
             $subcategory = htmlspecialchars($_POST['subcategory'] ?? "");
             $year = (int)($_POST['year'] ?? 0);
             $price = (float)($_POST['price'] ?? 0);
@@ -97,7 +108,6 @@ class BookController {
                 exit;
             }
 
-            // 🛡️ KONTROLA VLASTNICTVÍ PRO MAZÁNÍ
             if ($book['created_by'] !== $_SESSION['user_id']) {
                 $this->addErrorMessage('Nemáte oprávnění smazat tuto knihu, protože nejste jejím autorem.');
                 header('Location: ' . BASE_URL . '/index.php');
@@ -143,12 +153,15 @@ class BookController {
             exit;
         }
 
-        // 🛡️ KONTROLA VLASTNICTVÍ PRO FORMULÁŘ ÚPRAV
         if ($book['created_by'] !== $_SESSION['user_id']) {
             $this->addErrorMessage('Nemáte oprávnění upravovat tuto knihu, protože nejste jejím autorem.');
             header('Location: ' . BASE_URL . '/index.php');
             exit;
         }
+
+        // ZMĚNA: Načtení kategorií pro editační formulář
+        $categoryModel = new Category($db);
+        $categories = $categoryModel->getAllCategories();
 
         require_once '../app/views/books/book_edit.php';
     }
@@ -175,7 +188,10 @@ class BookController {
             $title = htmlspecialchars($_POST['title'] ?? "");
             $author = htmlspecialchars($_POST['author'] ?? "");
             $isbn = htmlspecialchars($_POST['isbn'] ?? "");
-            $category = htmlspecialchars($_POST['category'] ?? "");
+            
+            // ZMĚNA: Kategorie nyní chodí jako číslo
+            $category = (int)($_POST['category'] ?? 0);
+            
             $subcategory = htmlspecialchars($_POST['subcategory'] ?? "");
             $year = (int)($_POST['year'] ?? 0);
             $price = (float)($_POST['price'] ?? 0);
@@ -195,7 +211,6 @@ class BookController {
                     exit;
                 }
 
-                // 🛡️ KONTROLA VLASTNICTVÍ PRO ULOŽENÍ ZMĚN
                 if ($existingBook['created_by'] !== $_SESSION['user_id']) {
                     $this->addErrorMessage('Nemáte oprávnění ukládat změny u této knihy.');
                     header('Location: ' . BASE_URL . '/index.php');
@@ -214,7 +229,6 @@ class BookController {
                     $uploadedImages = $currentImages;
                 }
 
-                // !!! ZMĚNA JE TADY: Přidáno $_SESSION['user_id'] na úplný konec ↓
                 if ($bookModel->update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $uploadedImages, $_SESSION['user_id'])) {
                     $this->addSuccessMessage('Údaje o knize byly úspěšně upraveny. ✨');
                 } else {

@@ -30,10 +30,20 @@
                     <label for="year" class="block text-sm font-medium text-gray-600 mb-1">Rok vydání <span class="text-rose-400">*</span></label>
                     <input type="number" name="year" id="year" required class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition">
                 </div>
+                
+                <!-- 🎀 ZMĚNA ZDE: Roletka pro výběr kategorie -->
                 <div>
-                    <label for="category" class="block text-sm font-medium text-gray-600 mb-1">Kategorie</label>
-                    <input type="text" name="category" id="category" class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition">
+                    <label for="category" class="block text-sm font-medium text-gray-600 mb-1">Kategorie <span class="text-rose-400">*</span></label>
+                    <select id="category" name="category" required class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition bg-white">
+                        <option value="">-- Vyberte kategorii --</option>
+                        <?php foreach ($categories as $cat): ?>
+                            <option value="<?= htmlspecialchars($cat['id']) ?>">
+                                <?= htmlspecialchars($cat['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
+                
                 <div>
                     <label for="subcategory" class="block text-sm font-medium text-gray-600 mb-1">Podkategorie</label>
                     <input type="text" name="subcategory" id="subcategory" class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition">
