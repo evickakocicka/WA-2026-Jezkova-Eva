@@ -2,7 +2,8 @@
 // Načtení potřebných souborů
 require_once '../app/models/Database.php';
 require_once '../app/models/Book.php';
-require_once '../app/models/Category.php'; // ZMĚNA: Přidán nový model
+require_once '../app/models/Category.php';
+require_once '../app/models/Subcategory.php'; // 🎀 ZMĚNA: Přidán model pro podkategorie
 
 class BookController {
 
@@ -24,11 +25,15 @@ class BookController {
             exit;
         }
 
-        // ZMĚNA: Načtení kategorií pro formulář
         $database = new Database();
         $db = $database->getConnection();
+        
         $categoryModel = new Category($db);
         $categories = $categoryModel->getAllCategories();
+
+        // 🎀 ZMĚNA: Načtení podkategorií pro formulář
+        $subcategoryModel = new Subcategory($db);
+        $subcategories = $subcategoryModel->getAllSubcategories();
 
         require_once '../app/views/books/Book_Create.php';
     }
@@ -55,11 +60,11 @@ class BookController {
             $title = htmlspecialchars($_POST['title'] ?? "");
             $author = htmlspecialchars($_POST['author'] ?? "");
             $isbn = htmlspecialchars($_POST['isbn'] ?? "");
-            
-            // ZMĚNA: Kategorie nyní chodí jako číslo
             $category = (int)($_POST['category'] ?? 0); 
             
-            $subcategory = htmlspecialchars($_POST['subcategory'] ?? "");
+            // 🎀 ZMĚNA: Podkategorie nyní chodí také jako číslo (ID z roletky)
+            $subcategory = (int)($_POST['subcategory'] ?? 0);
+            
             $year = (int)($_POST['year'] ?? 0);
             $price = (float)($_POST['price'] ?? 0);
             $link = htmlspecialchars($_POST['link'] ?? "");
@@ -159,9 +164,12 @@ class BookController {
             exit;
         }
 
-        // ZMĚNA: Načtení kategorií pro editační formulář
         $categoryModel = new Category($db);
         $categories = $categoryModel->getAllCategories();
+
+        // 🎀 ZMĚNA: Načtení podkategorií pro editační formulář
+        $subcategoryModel = new Subcategory($db);
+        $subcategories = $subcategoryModel->getAllSubcategories();
 
         require_once '../app/views/books/book_edit.php';
     }
@@ -188,11 +196,11 @@ class BookController {
             $title = htmlspecialchars($_POST['title'] ?? "");
             $author = htmlspecialchars($_POST['author'] ?? "");
             $isbn = htmlspecialchars($_POST['isbn'] ?? "");
-            
-            // ZMĚNA: Kategorie nyní chodí jako číslo
             $category = (int)($_POST['category'] ?? 0);
             
-            $subcategory = htmlspecialchars($_POST['subcategory'] ?? "");
+            // 🎀 ZMĚNA: Podkategorie nyní chodí jako číslo
+            $subcategory = (int)($_POST['subcategory'] ?? 0);
+            
             $year = (int)($_POST['year'] ?? 0);
             $price = (float)($_POST['price'] ?? 0);
             $link = htmlspecialchars($_POST['link'] ?? "");

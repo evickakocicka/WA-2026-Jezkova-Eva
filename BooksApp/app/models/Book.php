@@ -8,7 +8,7 @@ class Book {
         $this->db = $database_connection;
     }
 
-    // 1. ULOŽENÍ (save) - !!! ZMĚNA: Přidáno $userId a sloupec created_by
+    // 1. ULOŽENÍ (save)
     public function save($title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $images = [], $userId = null) {
         $sql = "INSERT INTO books (title, author, category, subcategory, year, price, isbn, description, link, images, created_by) 
                 VALUES (:title, :author, :category, :subcategory, :year, :price, :isbn, :description, :link, :images, :created_by)";
@@ -26,26 +26,35 @@ class Book {
             ':description' => $description,
             ':link' => $link,
             ':images' => json_encode($images),
-            ':created_by' => $userId // !!! ZMĚNA: Předání ID do databáze
+            ':created_by' => $userId 
         ]);
     }
 
-    // 2. VÝPIS VŠECH (getAllBooks)
+    // 2. VÝPIS VŠECH (getAllBooks) - 🎀 ZMĚNA: Přidán LEFT JOIN pro získání názvů kategorií
     public function getAllBooks() {
-        $query = "SELECT * FROM books";
+        $query = "SELECT b.*, c.name AS category_name, s.name AS subcategory_name 
+                  FROM books b 
+                  LEFT JOIN categories c ON b.category = c.id 
+                  LEFT JOIN subcategories s ON b.subcategory = s.id";
+        
         $stmt = $this->db->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // 3. NAJÍT JEDNU PODLE ID (getById)
+    // 3. NAJÍT JEDNU PODLE ID (getById) - 🎀 ZMĚNA: Přidán LEFT JOIN pro získání názvů kategorií
     public function getById($id) {
-        $sql = "SELECT * FROM books WHERE id = :id";
+        $sql = "SELECT b.*, c.name AS category_name, s.name AS subcategory_name 
+                FROM books b 
+                LEFT JOIN categories c ON b.category = c.id 
+                LEFT JOIN subcategories s ON b.subcategory = s.id 
+                WHERE b.id = :id";
+        
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // 4. ÚPRAVA (update) - !!! ZMĚNA: Přidáno $userId a sloupec updated_by
+    // 4. ÚPRAVA (update)
     public function update($id, $title, $author, $category, $subcategory, $year, $price, $isbn, $description, $link, $images = [], $userId = null) {
         $sql = "UPDATE books 
                 SET title = :title, 
@@ -75,7 +84,7 @@ class Book {
             ':description' => $description,
             ':link' => $link,
             ':images' => json_encode($images),
-            ':updated_by' => $userId // !!! ZMĚNA: Předání ID pro auditní stopu
+            ':updated_by' => $userId 
         ]);
     }
 

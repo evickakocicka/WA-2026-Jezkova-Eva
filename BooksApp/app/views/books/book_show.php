@@ -23,18 +23,23 @@
                     <dt class="text-sm font-medium text-pink-400">Rok vydání</dt>
                     <dd class="mt-1 text-gray-700 font-medium"><?= htmlspecialchars($book['year'] ?? '-') ?></dd>
                 </div>
+                
+                <!-- 🎀 ZMĚNA ZDE: Vypisujeme textový název kategorie z JOINu místo čísla -->
                 <div class="sm:col-span-1">
                     <dt class="text-sm font-medium text-pink-400">Kategorie</dt>
                     <dd class="mt-1">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-pink-100 text-pink-600">
-                            <?= htmlspecialchars($book['category'] ?? 'Nezařazeno') ?>
+                            <?= htmlspecialchars($book['category_name'] ?? 'Nezařazeno') ?>
                         </span>
                     </dd>
                 </div>
+                
+                <!-- 🎀 ZMĚNA ZDE: Vypisujeme textový název podkategorie z JOINu místo čísla -->
                 <div class="sm:col-span-1">
                     <dt class="text-sm font-medium text-pink-400">Podkategorie</dt>
-                    <dd class="mt-1 text-gray-700 font-medium"><?= htmlspecialchars($book['subcategory'] ?? '-') ?></dd>
+                    <dd class="mt-1 text-gray-700 font-medium"><?= htmlspecialchars($book['subcategory_name'] ?? '-') ?></dd>
                 </div>
+                
                 <div class="sm:col-span-1">
                     <dt class="text-sm font-medium text-pink-400">Cena</dt>
                     <dd class="mt-1 text-pink-500 font-bold text-lg">

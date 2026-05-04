@@ -34,7 +34,7 @@
                     <input type="number" id="year" name="year" value="<?= htmlspecialchars($book['year'] ?? '') ?>" required class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition">
                 </div>
                 
-                <!-- 🎀 ZMĚNA ZDE: Roletka pro výběr kategorie s předvyplněnou hodnotou -->
+                <!-- Roletka pro výběr kategorie s předvyplněnou hodnotou -->
                 <div>
                     <label for="category" class="block text-sm font-medium text-gray-600 mb-1">Kategorie <span class="text-rose-400">*</span></label>
                     <select id="category" name="category" required class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition bg-white">
@@ -51,10 +51,22 @@
                     </select>
                 </div>
 
+                <!-- 🎀 ZMĚNA ZDE: Roletka pro výběr podkategorie s předvyplněnou hodnotou -->
                 <div>
                     <label for="subcategory" class="block text-sm font-medium text-gray-600 mb-1">Podkategorie</label>
-                    <input type="text" id="subcategory" name="subcategory" value="<?= htmlspecialchars($book['subcategory'] ?? '') ?>" class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition">
+                    <select id="subcategory" name="subcategory" class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition bg-white">
+                        <option value="0">-- Vyberte podkategorii --</option>
+                        <?php foreach ($subcategories as $subcat): ?>
+                            <?php 
+                            $isSelected = ($book['subcategory'] == $subcat['id']) ? 'selected' : ''; 
+                            ?>
+                            <option value="<?= htmlspecialchars($subcat['id']) ?>" <?= $isSelected ?>>
+                                <?= htmlspecialchars($subcat['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
+
                 <div>
                     <label for="price" class="block text-sm font-medium text-gray-600 mb-1">Cena knihy (Kč)</label>
                     <input type="number" id="price" name="price" step="0.5" value="<?= htmlspecialchars($book['price'] ?? '') ?>" class="w-full border border-pink-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition">
