@@ -39,7 +39,7 @@
                 </div>
                 
                 <h1 class="text-5xl font-black text-white mb-4 leading-tight"><?= htmlspecialchars($game['title']) ?></h1>
-                <p class="text-slate-500 mb-8 italic">Přidal(a) hráč: <span class="text-blue-400 font-bold"><?= htmlspecialchars($game['username'] ?? 'Neznámý') ?></span></p>
+                <p class="text-slate-500 mb-6 italic">Přidal(a) hráč: <span class="text-blue-400 font-bold"><?= htmlspecialchars($game['username'] ?? 'Neznámý') ?></span></p>
 
                 <div class="grid grid-cols-2 gap-6 mb-8">
                     <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-700/50 text-center">
@@ -47,7 +47,7 @@
                         <p class="text-xl font-black text-white"><?= (int)$game['playtime_hours'] ?> h</p>
                     </div>
                     <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-700/50 text-center">
-                        <p class="text-slate-500 text-[10px] font-bold uppercase mb-1 tracking-widest">Nejlepší trofej</p>
+                        <p class="text-slate-500 text-[10px] font-bold uppercase mb-1 tracking-widest">Nejlepší získaná trofej ve hře</p>
                         <?php 
                             $trophy = trim($game['trophy_type'] ?? '');
                             $noTrophyKeywords = ['zadna', 'žádná', 'není', 'neni', '---', '-', '0', 'bez trofejí'];
@@ -59,11 +59,19 @@
                     </div>
                 </div>
 
-                <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $game['author_id']): ?>
-                    <a href="<?= BASE_URL ?>/index.php?url=game/like/<?= $game['id'] ?>" class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-500 text-white px-8 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-pink-500/30 w-fit">
-                        ❤️ Dát lajk hře
-                    </a>
-                <?php endif; ?>
+                <div class="flex flex-wrap items-center gap-4">
+                    <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $game['author_id']): ?>
+                        <a href="<?= BASE_URL ?>/index.php?url=game/like/<?= $game['id'] ?>" class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-500 text-white px-8 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-pink-500/30">
+                            ❤️ Dát lajk hře
+                        </a>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($game['buy_link'])): ?>
+                        <a href="<?= htmlspecialchars($game['buy_link']) ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-2xl font-bold transition-all">
+                            🛒 Koupit hru
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
 
@@ -76,7 +84,7 @@
             </div>
             <div class="bg-blue-600/5 p-6 rounded-3xl border border-blue-500/20">
                 <h3 class="text-blue-400 font-bold uppercase text-xs mb-3 tracking-widest">Co mě na hře nejvíc bavilo?</h3>
-                <p class="text-slate-200 leading-relaxed italic">"<?= nl2br(htmlspecialchars($game['favorite_part'] ?? '')) ?>"</p>
+                <p class="text-slate-200 leading-relaxed italic">"<?= nl2br(htmlspecialchars($game['favorite_part'] ?? '', ENT_QUOTES, 'UTF-8', false)) ?>"</p>
             </div>
         </div>
     </div>
@@ -96,7 +104,7 @@
                     <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 flex justify-between items-start">
                         <div>
                             <span class="font-bold text-blue-400"><?= htmlspecialchars($comment['username']) ?></span>
-                            <p class="text-slate-300 mt-1"><?= nl2br(htmlspecialchars($comment['text'])) ?></p>
+                            <p class="text-slate-300 mt-1"><?= nl2br(htmlspecialchars($comment['text'], ENT_QUOTES, 'UTF-8', false)) ?></p>
                         </div>
                         
                         <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $comment['user_id']): ?>

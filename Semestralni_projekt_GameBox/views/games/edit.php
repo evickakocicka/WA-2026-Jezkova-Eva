@@ -24,7 +24,7 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Nejlepší trofej</label>
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Nejlepší získaná trofej ve hře</label>
                 <select name="trophy_type" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500 transition">
                     <option value="Bez trofejí" <?= $game['trophy_type'] == 'Bez trofejí' ? 'selected' : '' ?>>Bez trofejí / Nemá</option>
                     <option value="Platina" <?= $game['trophy_type'] == 'Platina' ? 'selected' : '' ?>>Platina 🏆</option>
@@ -66,9 +66,38 @@
             <input type="url" name="buy_link" value="<?= htmlspecialchars($game['buy_link'] ?? '') ?>" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500 transition" placeholder="https://store.playstation.com/...">
         </div>
 
-        <div class="space-y-2">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Změnit obal hry (nepovinné)</label>
-            <input type="file" name="image_file" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500 transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500">
+        <div class="space-y-4">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Obal hry (Obrázek)</label>
+            
+            <div class="flex items-center gap-6 p-4 bg-slate-900/50 rounded-2xl border border-slate-700">
+                <div class="h-20 w-20 bg-slate-800 rounded-lg overflow-hidden flex items-center justify-center border border-slate-600 shrink-0">
+                    <?php if (!empty($game['image_url'])): ?>
+                        <img src="<?= BASE_URL ?>/<?= htmlspecialchars($game['image_url']) ?>" class="h-full w-full object-cover" alt="Současný obal">
+                    <?php else: ?>
+                        <span class="text-2xl">🎮</span>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="flex-1 w-full overflow-hidden">
+                    <p class="text-xs text-slate-400 mb-3 font-medium">
+                        <?= !empty($game['image_url']) ? 'Aktuální obrázek je nastaven. Vyber nový jen pokud ho chceš změnit:' : 'Zatím nebyl nahrán žádný obrázek:' ?>
+                    </p>
+                    
+                    <div class="relative">
+                        <input type="file" id="image_upload" name="image_file" class="hidden" 
+                               onchange="document.getElementById('file_chosen_text').innerText = this.files[0] ? this.files[0].name : '<?= !empty($game['image_url']) ? 'Ponechán aktuální obrázek' : 'Soubor nevybrán' ?>'">
+                        
+                        <label for="image_upload" class="cursor-pointer inline-flex items-center gap-4">
+                            <span class="py-2 px-4 rounded-full text-xs font-bold bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 transition">
+                                Vybrat soubor
+                            </span>
+                            <span id="file_chosen_text" class="text-sm text-slate-400 truncate max-w-[200px] md:max-w-xs">
+                                <?= !empty($game['image_url']) ? 'Ponechán aktuální obrázek' : 'Soubor nevybrán' ?>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="space-y-2">

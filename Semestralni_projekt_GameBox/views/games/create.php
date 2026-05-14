@@ -34,7 +34,7 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Nejlepší trofej</label>
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Nejlepší získaná trofej ve hře</label>
                 <select name="trophy_type" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500 transition">
                     <option value="Bez trofejí">Bez trofejí / Nemá</option>
                     <option value="Platina">Platina 🏆</option>
@@ -59,6 +59,11 @@
                     <option value="1">⭐ (Odpad)</option>
                 </select>
             </div>
+        </div>
+
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Odkaz na obchod (např. PlayStation Store)</label>
+            <input type="url" name="buy_link" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500 transition" placeholder="https://store.playstation.com/...">
         </div>
 
         <div class="space-y-2">
